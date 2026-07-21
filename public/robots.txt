@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard
+Disallow: /vault
+Disallow: /invoices
+Disallow: /expenses
+Disallow: /audit
+Disallow: /settings
+
+Sitemap: https://finsolve.io/sitemap.xml

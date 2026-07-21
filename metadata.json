@@ -1,0 +1,6 @@
+{
+  "name": "Secura",
+  "description": "Secura is a premium full-stack personal organization platform combining an encrypted Password Manager, Invoice Generator, Personal Budget Planner, Expense Tracker, and Document Expiry Reminder, integrated with Gemini-powered smart features, audit logs, and dual theme support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -85,7 +85,7 @@ export default function ExpiryReminder({ token }: ExpiryReminderProps) {
   const [title, setTitle] = useState('');
   const [documentNumber, setDocumentNumber] = useState('');
   const [expiryDate, setExpiryDate] = useState('');
-  const [category, setCategory] = useState('Passport');
+  const [category, setCategory] = useState<'passport' | 'visa' | 'driver_license' | 'insurance' | 'national_id' | 'other'>('passport');
   const [notes, setNotes] = useState('');
 
   const loadDocuments = async () => {
@@ -118,21 +118,9 @@ export default function ExpiryReminder({ token }: ExpiryReminderProps) {
     }
     setFormError(null);
 
-    let docType: 'passport' | 'visa' | 'driver_license' | 'insurance' | 'national_id' | 'other' = 'other';
-    const catLower = category.toLowerCase();
-    if (catLower.includes('passport')) {
-      docType = 'passport';
-    } else if (catLower.includes('visa')) {
-      docType = 'visa';
-    } else if (catLower.includes('license') || catLower.includes('driving')) {
-      docType = 'driver_license';
-    } else if (catLower.includes('contract')) {
-      docType = 'insurance';
-    }
-
     const payload = { 
       title, 
-      documentType: docType, 
+      documentType: category, 
       documentNumber: documentNumber.trim() || 'N/A', 
       expiryDate, 
       notes: notes || '',
@@ -180,7 +168,7 @@ export default function ExpiryReminder({ token }: ExpiryReminderProps) {
     setTitle('');
     setDocumentNumber('');
     setExpiryDate('');
-    setCategory('Passport');
+    setCategory('passport');
     setNotes('');
     setFormError(null);
   };
@@ -189,7 +177,6 @@ export default function ExpiryReminder({ token }: ExpiryReminderProps) {
     const matchesSearch = doc.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           (doc.documentNumber || '').toLowerCase().includes(searchQuery.toLowerCase());
     
-    // Map backend documentType to category names for filter check
     const mappedCatName = getCategoryName(doc.documentType);
     const matchesCategory = activeCategory === 'All' || mappedCatName.toLowerCase() === activeCategory.toLowerCase();
     return matchesSearch && matchesCategory;
@@ -216,7 +203,7 @@ export default function ExpiryReminder({ token }: ExpiryReminderProps) {
       {/* Categories select & Search */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-1.5">
-          {['All', 'Passport', 'Visa', 'Driving License', 'Contract'].map((cat, i) => (
+          {['All', 'Passport', 'Visa', 'Driving License', 'Insurance', 'National ID', 'Other'].map((cat, i) => (
             <button 
               key={i}
               onClick={() => setActiveCategory(cat)}
@@ -381,14 +368,15 @@ export default function ExpiryReminder({ token }: ExpiryReminderProps) {
                 <label className="text-[10px] font-bold text-zinc-400 uppercase">Category</label>
                 <select 
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => setCategory(e.target.value as any)}
                   className="w-full px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-zinc-800 dark:text-zinc-100 text-xs focus:outline-none"
                 >
-                  <option value="Passport">Passport</option>
-                  <option value="Visa">Visa</option>
-                  <option value="Driving License">Driving License</option>
-                  <option value="Contract">SaaS Contract / Agreement</option>
-                  <option value="Others">Others</option>
+                  <option value="passport">Passport</option>
+                  <option value="visa">Visa</option>
+                  <option value="driver_license">Driving License</option>
+                  <option value="insurance">Insurance / Contract</option>
+                  <option value="national_id">National ID</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
 
@@ -468,7 +456,7 @@ export default function ExpiryReminder({ token }: ExpiryReminderProps) {
         </div>
       </div>
 
-      {/* 600+ Words SEO-Optimized Article Section */}
+      {/* Article Section */}
       <article className="mt-20 border-t border-zinc-100 dark:border-zinc-800/80 pt-16 max-w-4xl mx-auto text-zinc-700 dark:text-zinc-300">
         <header className="mb-8">
           <span className="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">SEO Insights & Guide</span>

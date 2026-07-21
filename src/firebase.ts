@@ -2,29 +2,26 @@ import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-const env = (import.meta as any).env || {};
-
-// Firebase configuration using Vite environment variables
+// Direct Firebase Configuration
 const firebaseConfig = {
-  apiKey: env.VITE_FIREBASE_API_KEY,
-  authDomain: env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: env.VITE_FIREBASE_APP_ID
+  apiKey: "AIzaSyC31Z3auemmmhEQbQ_IPdseW0sncObjCtk",
+  authDomain: "invoice-generator-653a2.firebaseapp.com",
+  databaseURL: "https://invoice-generator-653a2-default-rtdb.firebaseio.com",
+  projectId: "invoice-generator-653a2",
+  storageBucket: "invoice-generator-653a2.firebasestorage.app",
+  messagingSenderId: "429543997108",
+  appId: "1:429543997108:web:4468a19d307ef50dcc61e1",
+  measurementId: "G-CH298M7BYG"
 };
 
-/**
- * Returns the Firebase Auth instance, Firestore instance, and Google Provider if configured.
- * Returns null if the VITE_FIREBASE_API_KEY is not defined.
- */
+// Initialize Firebase
+const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const provider = new GoogleAuthProvider();
+
 export const getClientFirebase = () => {
-  if (!env.VITE_FIREBASE_API_KEY) {
-    return null;
-  }
-  const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
   return { auth, db, provider };
 };
+
+export default app;

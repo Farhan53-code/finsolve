@@ -7,17 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Clock, Plus, Trash2, Search, Filter, Loader2, Sparkles, Download, Check, X, CreditCard, DollarSign, Wallet, AlertCircle, ChevronDown
 } from 'lucide-react';
-
-// Expense interface ko yahan define kar diya taaki import error na aaye
-interface Expense {
-  id: string;
-  description: string;
-  amount: number;
-  date: string;
-  category: string;
-  paymentMethod: 'card' | 'cash' | 'crypto' | 'bank_transfer';
-  notes?: string;
-}
+import { Expense } from '../types.js';
 
 interface ExpenseTrackerProps {
   token: string | null;
@@ -143,6 +133,7 @@ export default function ExpenseTracker({ token }: ExpenseTrackerProps) {
 
   useEffect(() => {
     loadExpenses();
+    // Set default date to today
     const today = new Date().toISOString().split('T')[0];
     setDate(today);
   }, [token]);
@@ -600,7 +591,7 @@ export default function ExpenseTracker({ token }: ExpenseTrackerProps) {
         </div>
       </div>
 
-      {/* Article Section */}
+      {/* 600+ Words SEO-Optimized Article Section */}
       <article className="mt-20 border-t border-zinc-100 dark:border-zinc-800/80 pt-16 max-w-4xl mx-auto text-zinc-700 dark:text-zinc-300">
         <header className="mb-8">
           <span className="text-[10px] font-bold tracking-widest text-zinc-400 uppercase">SEO Insights & Guide</span>
@@ -644,6 +635,14 @@ export default function ExpenseTracker({ token }: ExpenseTrackerProps) {
 
           <p>
             Whether you prefer tracking on a computer or using a <strong className="text-zinc-900 dark:text-zinc-100">personal expense tracker app free</strong> on your phone, Secura's mobile-friendly design has you covered. It functions smoothly as an <strong className="text-zinc-900 dark:text-zinc-100">expense tracker online free app</strong> to log items on the go. Secura is not just a standard tracker; it is an all-in-one <strong className="text-zinc-900 dark:text-zinc-100">money tracker app</strong> and <strong className="text-zinc-900 dark:text-zinc-100">money tracker-expense & budget</strong> partner. By checking your reports via our <strong className="text-zinc-900 dark:text-zinc-100">monthly expense tracker online free</strong> panel, you can audit your financial health and see where to save more.
+          </p>
+
+          <p>
+            To make the most of your ledger, we advise tracking every expenditure immediately at the point of purchase. Delaying entries by even a few days leads to memory fade and inaccurate records. Additionally, we recommend performing weekly audits where you review your spending against your predefined budget category limits. This dual tracking-and-budgeting system has been proven to lower household waste by up to 25%, giving you more money to invest in your future goals.
+          </p>
+
+          <p>
+            Make the smart choice today and stop relying on outdated methods or expensive, cluttered software. Tap into the ultimate <strong className="text-zinc-900 dark:text-zinc-100">best personal expense tracker app free</strong> option on the web and enjoy an organized, stress-free financial lifestyle with Secura's professional suite.
           </p>
         </div>
       </article>

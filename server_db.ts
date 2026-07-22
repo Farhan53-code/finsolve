@@ -105,26 +105,33 @@ function cleanForFirestore(obj: any): any {
   return obj;
 }
 
+let firestoreDisabled = false;
+
 // Write helper for Firestore (Async fire-and-forget)
 function writeToFirestore(collectionName: string, docId: string, data: any) {
+  if (firestoreDisabled) return;
   const cleanedData = cleanForFirestore(data);
   setDoc(doc(firestoreDb, collectionName, docId), cleanedData, { merge: true })
     .then(() => {
       console.log(`[Firestore Sync] Successfully written ${collectionName}/${docId}`);
     })
-    .catch((err) => {
-      console.error(`[Firestore Error] Failed to write ${collectionName}/${docId}:`, err);
+    .catch((err: any) => {
+      if (err?.code === 'permission-denied' || err?.message?.includes('PERMISSION_DENIED')) {
+        firestoreDisabled = true;
+        console.warn(`[Firestore Sync] Cloud database permission restriction detected (${err?.message || 'PERMISSION_DENIED'}). Operating seamlessly with local JSON database.`);
+      } else {
+        console.warn(`[Firestore Error] Cloud write issue for ${collectionName}/${docId}. Operating with local database.`);
+      }
     });
 }
 
 // Connect to Firestore and Sync/Migrate on server bootup
 async function syncAndMigrateWithFirestore() {
+  initDb();
+  if (firestoreDisabled) return;
   try {
     console.log("[Firestore Sync] Connecting and loading from Firestore cloud database...");
     const collections = ['users', 'passwords', 'invoices', 'budgets', 'expenses', 'documents', 'auditLogs', 'notifications'];
-    
-    // First read what's in local JSON
-    initDb();
     
     for (const collName of collections) {
       const collRef = collection(firestoreDb, collName);
@@ -151,8 +158,13 @@ async function syncAndMigrateWithFirestore() {
     
     console.log("[Firestore Sync] Complete. Local database cache is synchronized with cloud.");
     saveDb();
-  } catch (error) {
-    console.error("[Firestore Sync Error] Sync failed, operating with local backup JSON:", error);
+  } catch (error: any) {
+    if (error?.code === 'permission-denied' || error?.message?.includes('PERMISSION_DENIED')) {
+      firestoreDisabled = true;
+      console.warn("[Firestore Sync] Cloud database permissions restricted. Operating seamlessly with high-performance local JSON database.");
+    } else {
+      console.warn("[Firestore Sync Error] Sync failed, operating with local backup JSON:", error?.message || error);
+    }
   }
 }
 
